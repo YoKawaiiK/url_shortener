@@ -16,12 +16,11 @@ module.exports = {
     },
   },
 
-  // css: {
-  //   loaderOptions: {
-  //     scss: {
-  //       // prependData: "@import '~@/assets/scss/base/_vars';",
-  //       prependData: "@import '~@/assets/scss/main';",
-  //     },
-  //   },
-  // },
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: "@import '~@/assets/scss/main';",
+      },
+    },
+  },
 };

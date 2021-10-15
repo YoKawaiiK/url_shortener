@@ -3,7 +3,7 @@ import { UrlShortenerService } from "@/services/index";
 import { idGenerator } from "@/utils/index";
 
 import {
-  GET_All_URL,
+  GET_URL_LIST,
   ADD_SHORT_URL,
   DELETE_SHORT_URL,
   UPDATE_SHORT_URL,
@@ -14,7 +14,7 @@ import {
 
   // URL_TO_EXPAND,
   // GET_URL_STATS
-} from "./constansts";
+} from "./constants";
 
 export default {
   namespaced: true,
@@ -23,7 +23,7 @@ export default {
     urlList: [],
   },
   getters: {
-    [GET_All_URL](state) {
+    [GET_URL_LIST](state) {
       return state.urlList;
     },
   },

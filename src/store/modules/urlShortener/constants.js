@@ -1,10 +1,13 @@
+// name module
+export const URL_SHORTENER = "urlShortener";
+
 // getters
-export const GET_All_URL = "getAllUrl";
+export const GET_URL_LIST = "getUrlList";
 
 // mutations
-export const ADD_SHORT_URL = "";
-export const DELETE_SHORT_URL = "";
-export const UPDATE_SHORT_URL = "";
+export const ADD_SHORT_URL = "addShortUrl";
+export const DELETE_SHORT_URL = "deleteShortUrl";
+export const UPDATE_SHORT_URL = "updateShortUrl";
 
 // actions
 export const SHORT_URL_LIST = "shortUrlList";
