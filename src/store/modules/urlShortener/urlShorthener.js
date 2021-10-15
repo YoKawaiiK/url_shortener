@@ -7,7 +7,7 @@ import {
   ADD_SHORT_URL,
   DELETE_SHORT_URL,
   UPDATE_SHORT_URL,
-  SHORT_URL_LIST,
+  // SHORT_URL_LIST,
   URL_TO_SHORTEN,
   URL_TO_UPDATE,
   URL_TO_DELETE,
@@ -43,7 +43,7 @@ export default {
   },
   actions: {
     // async [SHORT_URL_LIST]({ commit }, modalData) {},
-    async [URL_TO_SHORTEN]({ commit, state }, modalData) {
+    async [URL_TO_SHORTEN]({ commit }, modalData) {
       try {
         const { data } = UrlShortenerService.shorten(modalData);
 
