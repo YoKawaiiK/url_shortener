@@ -6,7 +6,12 @@
           <div class="container">
             <div class="navbar-brand">
               <a class="navbar-item">
-                <p class="title">Url shortener</p>
+                <router-link
+                  class="title"
+                  :to="{ name: $options.routes.ROUTE_DASHBOARD }"
+                >
+                  Url shortener</router-link
+                >
                 <!-- <p class="subtitle">Shorten your link!</p> -->
               </a>
               <span class="navbar-burger" data-target="navbarMenuHeroA">
@@ -23,6 +28,7 @@
                   :key="index"
                   class="navbar-item"
                   :to="{ name: route }"
+                  v-show="route != $route.name"
                   >{{ route }}</router-link
                 >
                 <span class="navbar-item">

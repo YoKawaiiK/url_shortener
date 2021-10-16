@@ -1,5 +1,12 @@
 <template>
   <div>
+    <the-v-modal-form-update
+      :show="modal.show"
+      :fields-data="modal.fieldsData"
+      @close="showModalForm"
+      @click="modalFormHandler"
+    />
+
     <div class="the_url_shortener">
       <div class="the_url_shortener__url_content">
         <div class="field is-grouped">
@@ -48,7 +55,10 @@
                 <td class="has-text-centered">{{ url.shortUrl }}</td>
                 <td>
                   <span class="buttons">
-                    <button class="button is-small is-warning">
+                    <button
+                      class="button is-small is-warning"
+                      @click.prevent="clickShowModalEdit(url)"
+                    >
                       <span class="icon is-small">
                         <font-awesome-icon :icon="['fas', 'pen']" />
                       </span>
@@ -79,10 +89,20 @@ import {
   GET_URL_LIST,
 } from "@/store/modules/urlShortener/constants";
 
+import TheVModalFormUpdate from "@/components/TheVModalFormUpdate";
+
 export default {
+  name: "TheUrlShortener",
+  components: {
+    TheVModalFormUpdate,
+  },
   data() {
     return {
       selectedRow: null,
+      modal: {
+        show: false,
+        fieldsData: {},
+      },
       urlList: [
         {
           id: 1,
@@ -102,6 +122,24 @@ export default {
     ...mapGetters(URL_SHORTENER, { getUrlList: GET_URL_LIST }),
   },
   methods: {
+    clickShowModalEdit(item) {
+      this.modal.fieldsData = item;
+      this.modal.show = !this.modal.show;
+    },
+    showModalForm() {
+      this.modal.show = !this.modal.show;
+    },
+
+    async modalFormHandler(data) {
+      try {
+        console.log(data);
+
+        // if edit
+        this.modal.show = !this.modal.show;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     ...mapActions(URL_SHORTENER, [
       SHORT_URL_LIST,
       URL_TO_SHORTEN,

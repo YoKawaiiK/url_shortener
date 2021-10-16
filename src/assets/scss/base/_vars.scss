@@ -6,15 +6,26 @@ $beige-lighter: #F8EDE3;
 // Update Bulma's global variables
 // $family-sans-serif: "Nunito", sans-serif;
 $grey-dark: #334756 ;
+
 $primary: #BCCC9A;
+$primary-light: lighten($primary, 25%);
+$primary-focus: darken($primary, 20%);
+
 $danger : #C37B89;
 $warning : #ECAC5D;
 $success : #BCCC9A;
-$Info : #D1E8E4;
+$info : #D1E8E4;
 $link: #39A388;
 
 
+$color-on-primary: #F8EDE3;
+$color-on-primary-ligth:#334756 ;
+
 $grey-light: $beige-light;
+
+
+$shadow-color: rgba(168, 168, 168, 0.13);
+$shadow-color-active: rgba(168, 168, 168, 0.329);
 
 
 $widescreen-enabled: false;
@@ -26,9 +37,27 @@ $control-border-width: 2px;
 $input-border-color: transparent;
 $input-shadow: none;
 
-
 // table
 $table-background-color: transparent;
 $table-striped-row-even-background-color: lighten($primary, 25%);
 // highligth color
 $table--highlight-color: darken($primary, 20%);
+
+
+// typography
+$font-family: Montserrat, Avenir, Helvetica, Arial, sans-serif;
+$font-weight-bold: 700;
+$font-weight-medium: 500;
+$font-weight-normal: 400;
+$font-weight-thin: 200;
+
+// vmodalform
+$v-modal-form--bg: $body-background-color;
+$v-modal-form--header-title--font-size: 24px;
+$v-modal-form--font-size: 14px;
+$v-modal-form--close-button--color: $danger;
+$v-modal-form--footer-button--bg: $primary;
+$v-modal-form--footer-button--bg-primary-light: $primary-light;
+$v-modal-form--footer-button--font-size: 14px;
+
+$v-modal-form--shadow-color: rgba(168, 168, 168, 0.13);
