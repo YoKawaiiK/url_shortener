@@ -6,21 +6,39 @@ import {
 } from "@/utils/index";
 
 // instance global
-export const $axios = axios.create();
+export const $axios = axios.create({
+  baseURL: process.env.VUE_APP_API_BASE_URL,
+});
 
 // check token in store and add to headers Authorization: Bearer Token
-export const setConfig = (config) => {
+const setConfig = (config) => {
   const apiToken = process.env.VUE_APP_API_KEY;
   if (apiToken) {
-    config = { ...config.params, apiToken: apiToken };
+    // POST, DELETE, etc
+    if ("data" in config) {
+      config.data.apiToken = apiToken;
+    }
+    // GET
+    else {
+      config.params.apiToken = apiToken;
+    }
   }
+
   return config;
 };
 
 $axios.interceptors.request.use(
   async function (config) {
-    config.data = objectKeysCamelCaseToSnakeCase(config.data);
-    return setConfig(config);
+    config = setConfig(config);
+    //  POST, DELETE, etc
+    if ("data" in config) {
+      config.data = objectKeysCamelCaseToSnakeCase(config.data);
+    }
+    // GET
+    else {
+      config.params = objectKeysCamelCaseToSnakeCase(config.params);
+    }
+    return config;
   },
   async function (errorRequest) {
     throw errorRequest;

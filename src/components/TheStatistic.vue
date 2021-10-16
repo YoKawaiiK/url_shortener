@@ -1,107 +1,98 @@
 <template>
   <div class="the_statistic">
-    <div class="tile is-ancestor">
-      <!-- The magical tile element! -->
-      <div
-        class="tile is-parent"
-        v-for="(browser, index) of stats.browsers"
-        :key="index"
-      >
-        <article
-          class="tile is-child notification"
-          :class="generateBackgroundColor()"
+    <div
+      v-if="
+        Object.keys(getUrlStats).length !== 0 &&
+        getUrlStats.constructor === Object
+      "
+    >
+      <div class="tile is-ancestor" v-if="getUrlStats.browsers.length > 0">
+        <div
+          class="tile is-parent"
+          v-for="(browser, index) of getUrlStats.browsers"
+          :key="index"
         >
-          <p class="title">{{ browser.browser }}</p>
-          <p class="subtitle">Total count: {{ browser.total }}</p>
-        </article>
+          <article
+            class="tile is-child notification"
+            :class="generateBackgroundColor()"
+          >
+            <p class="title">{{ browser.browser }}</p>
+            <p class="subtitle">Total count: {{ browser.total }}</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="tile is-ancestor" v-if="getUrlStats.referrers.length > 0">
+        <div class="tile is-parent">
+          <article
+            class="tile is-child notification"
+            :class="generateBackgroundColor()"
+          >
+            <p class="title">{{ getUrlStats.referrers[0].referrer }}</p>
+            <p class="subtitle">
+              Total referrer: {{ getUrlStats.referrers[0].total }}
+            </p>
+          </article>
+        </div>
+      </div>
+
+      <div class="tile is-ancestor" v-if="getUrlStats.platforms.length > 0">
+        <div
+          class="tile is-parent"
+          v-for="(platform, index) of getUrlStats.platforms"
+          :key="index"
+        >
+          <article
+            class="tile is-child notification"
+            :class="generateBackgroundColor()"
+          >
+            <p class="title">{{ platform.platform }}</p>
+            <p class="subtitle">Total count: {{ platform.total }}</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="tile is-ancestor">
+        <div class="tile is-parent">
+          <article
+            class="tile is-child notification"
+            :class="generateBackgroundColor()"
+          >
+            <p class="title">Other stats information:</p>
+            <p>Long url: {{ getUrlStats.data.longUrl }}</p>
+            <p>Short url: {{ getUrlStats.data.shortUrl }}</p>
+            <p>Created at: {{ getUrlStats.data.createdAt }}</p>
+          </article>
+        </div>
       </div>
     </div>
-
-    <div class="tile is-ancestor">
-      <div class="tile is-parent">
-        <article
-          class="tile is-child notification"
-          :class="generateBackgroundColor()"
-        >
-          <p class="title">{{ stats.referrers[0].referrer }}</p>
-          <p class="subtitle">Total referrer: {{ stats.referrers[0].total }}</p>
-        </article>
-      </div>
-    </div>
-
-    <div class="tile is-ancestor">
-      <!-- The magical tile element! -->
-      <div
-        class="tile is-parent"
-        v-for="(platform, index) of stats.platforms"
-        :key="index"
-      >
-        <article
-          class="tile is-child notification"
-          :class="generateBackgroundColor()"
-        >
-          <p class="title">{{ platform.platform }}</p>
-          <p class="subtitle">Total count: {{ platform.total }}</p>
-        </article>
-      </div>
-    </div>
-
-    <div class="tile is-ancestor">
-      <div class="tile is-parent">
-        <article
-          class="tile is-child notification"
-          :class="generateBackgroundColor()"
-        >
-          <p class="title">Other information:</p>
-          <p>Long url: {{ stats.data.long_url }}</p>
-          <p>Short url: {{ stats.data.short_url }}</p>
-          <p>Created at: {{ stats.data.created_at }}</p>
-        </article>
+    <div v-else>
+      <div class="tile is-ancestor">
+        <!-- The magical tile element! -->
+        <div class="tile is-parent">
+          <article
+            class="tile is-child notification"
+            :class="generateBackgroundColor()"
+          >
+            <p class="subtitle">To click on row in table, after added url.</p>
+          </article>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import {
+  URL_SHORTENER,
+  GET_URL_STATS,
+} from "@/store/modules/urlShortener/constants";
+
 export default {
   name: "TheStatistic",
-  data() {
-    return {
-      stats: {
-        clicks: 21,
-        browsers: [
-          {
-            browser: "Chrome",
-            total: 14,
-          },
-          {
-            browser: "Firefox",
-            total: 2,
-          },
-        ],
-        referrers: [
-          {
-            referrer: "Unknown",
-            total: 13,
-          },
-        ],
-        platforms: [
-          {
-            platform: "Mac",
-            total: 8,
-          },
-          {
-            platform: "Windows",
-            total: 5,
-          },
-        ],
-        data: {
-          long_url: "https:example.com",
-          short_url: "https:t.lyOYXL",
-          created_at: "2019-08-03 14:47:40",
-        },
-      },
-    };
+  computed: {
+    ...mapGetters(URL_SHORTENER, { getUrlStats: GET_URL_STATS }),
   },
   methods: {
     generateBackgroundColor() {
@@ -123,6 +114,10 @@ export default {
 
 <style lang="scss">
 .the_statistic {
+  padding-right: 0px;
   width: 100%;
+  // position: relative;
+  word-wrap: break-word;
+  max-width: 470px;
 }
 </style>

@@ -9,7 +9,20 @@
         <div class="field">
           <p class="control has-icons-left">
             <input
-              v-model="dataModal.url"
+              :value="dataModal.shortUrl"
+              class="input"
+              type="text"
+              readonly
+            />
+            <span class="icon is-small is-left">
+              <font-awesome-icon :icon="['fas', 'check']" />
+            </span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left">
+            <input
+              v-model="dataModal.longUrl"
               class="input"
               type="text"
               placeholder="Your url"
@@ -23,7 +36,7 @@
     </template>
 
     <template v-slot:footer-button-text>
-      <span>Добавить</span>
+      <span>Update</span>
     </template>
   </v-modal-form>
 </template>
@@ -52,15 +65,16 @@ export default {
   data() {
     return {
       dataModal: {
-        url: "",
+        id: "",
+        longUrl: "",
+        shortUrl: "",
       },
     };
   },
   watch: {
     show() {
       if (this.fieldsData.id && this.show) {
-        // fillModalFormForEdit(this.dataModal, this.fieldsData);
-        this.dataModal.url = this.fieldsData.url;
+        this.dataModal = { ...this.fieldsData };
       }
     },
   },

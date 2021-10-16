@@ -10,7 +10,7 @@ export default () => {
     return lastGeneratedId;
   }
 
-  lastGeneratedId += 1;
+  lastGeneratedId = +lastGeneratedId + 1;
   Cookies.set(cookieName, lastGeneratedId);
   return lastGeneratedId;
 };

@@ -12,7 +12,12 @@
         <div class="field is-grouped">
           <!-- <p class="control is-expanded has-icons-left has-icons-right"> -->
           <p class="control is-expanded">
-            <input class="input is-primary" type="email" placeholder="Email" />
+            <input
+              v-model="createUrl.longUrl"
+              class="input is-primary"
+              type="text"
+              placeholder="Youe url"
+            />
             <!-- <span class="icon is-left">
               <font-awesome-icon :icon="['fas', 'arrow-alt-circle-right']" />
             </span> -->
@@ -21,7 +26,7 @@
                   </span> -->
           </p>
           <p class="control">
-            <button class="button is-primary">
+            <button class="button is-primary" @click.stop="createShortUrl">
               <span class="icon">
                 <font-awesome-icon :icon="['fas', 'arrow-alt-circle-right']" />
               </span>
@@ -31,9 +36,12 @@
         </div>
       </div>
       <div class="the_url_shortener__url_content">
-        <div class="url_content__table">
+        <div class="url_content__table" v-if="getUrlList.length">
           <table
-            class="table is-striped is-fullwidth is-hoverable is-clickable"
+            class="
+              table
+              is-striped is-fullwidth is-hoverable is-clickable is-scrollable
+            "
           >
             <thead>
               <tr>
@@ -45,14 +53,18 @@
             </thead>
             <tbody>
               <tr
-                v-for="url in urlList"
-                @click="selectRow(url.id)"
+                v-for="url in getUrlList"
+                @click="selectRow(url)"
                 :key="url.id"
                 :class="{ highlight: url.id == selectedRow }"
               >
                 <td class="has-text-centered">{{ url.id }}</td>
-                <td class="has-text-centered">{{ url.url }}</td>
-                <td class="has-text-centered">{{ url.shortUrl }}</td>
+                <td class="has-text-centered is-td-bordered">
+                  <a :href="url.longUrl"> {{ url.longUrl }}</a>
+                </td>
+                <td class="has-text-centered">
+                  <a :href="url.shortUrl"> {{ url.shortUrl }}</a>
+                </td>
                 <td>
                   <span class="buttons">
                     <button
@@ -63,7 +75,10 @@
                         <font-awesome-icon :icon="['fas', 'pen']" />
                       </span>
                     </button>
-                    <button class="button is-small is-danger">
+                    <button
+                      class="button is-small is-danger"
+                      @click.prevent="clickDeleteUrl(url)"
+                    >
                       <span class="icon is-small">
                         <font-awesome-icon :icon="['fas', 'trash']" />
                       </span>
@@ -73,6 +88,9 @@
               </tr>
             </tbody>
           </table>
+        </div>
+        <div v-else>
+          <span>You don't have url.</span>
         </div>
       </div>
     </div>
@@ -86,7 +104,9 @@ import {
   SHORT_URL_LIST,
   URL_TO_SHORTEN,
   URL_TO_DELETE,
+  URL_TO_UPDATE,
   GET_URL_LIST,
+  SHORT_URL_STATS,
 } from "@/store/modules/urlShortener/constants";
 
 import TheVModalFormUpdate from "@/components/TheVModalFormUpdate";
@@ -99,22 +119,13 @@ export default {
   data() {
     return {
       selectedRow: null,
+      createUrl: {
+        longUrl: "",
+      },
       modal: {
         show: false,
         fieldsData: {},
       },
-      urlList: [
-        {
-          id: 1,
-          url: "sdfsfd",
-          shortUrl: "sdfsfd",
-        },
-        {
-          id: 2,
-          url: "sdfsfd",
-          shortUrl: "sdfsfd",
-        },
-      ],
     };
   },
 
@@ -122,6 +133,13 @@ export default {
     ...mapGetters(URL_SHORTENER, { getUrlList: GET_URL_LIST }),
   },
   methods: {
+    ...mapActions(URL_SHORTENER, [
+      SHORT_URL_LIST,
+      URL_TO_SHORTEN,
+      URL_TO_DELETE,
+      URL_TO_UPDATE,
+      SHORT_URL_STATS,
+    ]),
     clickShowModalEdit(item) {
       this.modal.fieldsData = item;
       this.modal.show = !this.modal.show;
@@ -129,26 +147,45 @@ export default {
     showModalForm() {
       this.modal.show = !this.modal.show;
     },
-
+    async createShortUrl() {
+      try {
+        // if edit
+        if (
+          this.createUrl.longUrl.length > 5 &&
+          this.createUrl.longUrl.length < 200
+        ) {
+          let urlObject = {
+            longUrl: this.createUrl.longUrl,
+          };
+          this[URL_TO_SHORTEN](urlObject);
+          this.createUrl.longUrl = "";
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // update
     async modalFormHandler(data) {
       try {
-        console.log(data);
+        // edit
+        await this[URL_TO_UPDATE](data);
 
-        // if edit
         this.modal.show = !this.modal.show;
       } catch (error) {
         console.log(error);
       }
     },
-    ...mapActions(URL_SHORTENER, [
-      SHORT_URL_LIST,
-      URL_TO_SHORTEN,
-      URL_TO_DELETE,
-    ]),
-
-    selectRow(row) {
-      this.selectedRow = row;
-      //Do other things
+    async clickDeleteUrl(data) {
+      try {
+        // edit
+        await this[URL_TO_DELETE]({ ...data });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async selectRow(row) {
+      this.selectedRow = row.id;
+      this[SHORT_URL_STATS](row);
     },
   },
   mounted() {
@@ -160,6 +197,7 @@ export default {
 <style lang="scss" scoped>
 .the_url_shortener {
   width: 100%;
+  max-width: 435px;
   display: flex;
   flex-direction: column;
 
@@ -170,14 +208,50 @@ export default {
       margin-top: 20px;
     }
 
+    .table {
+      &.is-scrollable {
+        position: relative;
+        tbody {
+          height: calc(70vh);
+          max-width: calc(435px - 30px);
+          overflow-y: scroll;
+          overflow-x: hidden;
+          // width: auto;
+          position: absolute;
+
+          // scrollbar
+          // Firefox
+          scrollbar-width: auto;
+          scrollbar-color: $primary $body-background-color;
+          // Chrome, Edge, and Safari
+          &::-webkit-scrollbar {
+            width: 13px;
+          }
+          &::-webkit-scrollbar-track {
+            background: $body-background-color;
+          }
+          &::-webkit-scrollbar-thumb {
+            background-color: $primary;
+            border-radius: 3px;
+          }
+        }
+      }
+    }
+
     .url_content__table {
       .is-clickable {
         tbody {
+          // display: block;
           tr {
             cursor: pointer;
 
             &.highlight {
               background-color: $table--highlight-color;
+            }
+
+            .is-td-bordered {
+              max-width: 150px;
+              word-wrap: break-word;
             }
           }
         }
