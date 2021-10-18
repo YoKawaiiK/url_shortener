@@ -44,8 +44,7 @@ export default {
     gap: 40px;
 
     .columns__container_column {
-      // widows: 100%;
-      flex: 1 1 auto;
+      flex-basis: 1;
     }
   }
 }

@@ -4,22 +4,7 @@
       <div class="list_url_short__list_column">
         <h1 class="title is-2">Clear your history</h1>
         <div class="list_column__table">
-          <table class="table is-striped is-fullwidth">
-            <thead>
-              <tr>
-                <th class="has-text-centered">Id</th>
-                <th class="has-text-centered">Url</th>
-                <th class="has-text-centered">Short</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(url, index) in getUrlList" :key="index">
-                <td class="has-text-centered">{{ url.id }}</td>
-                <td class="has-text-centered">{{ url.longUrl }}</td>
-                <td class="has-text-centered">{{ url.shortUrl }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <v-table-url></v-table-url>
         </div>
 
         <div class="list_column__button">
@@ -45,8 +30,13 @@ import {
 
 import { ROUTE_DASHBOARD } from "@/router/constants";
 
+import VTableUrl from "@/components/VTableUrl";
+
 export default {
   name: "TheListUrlShort",
+  components: {
+    VTableUrl,
+  },
   computed: {
     ...mapGetters(URL_SHORTENER, { getUrlList: GET_URL_LIST }),
   },
@@ -68,10 +58,15 @@ export default {
   display: flex;
   justify-content: space-around;
   .list_url_short__list_column {
+    position: relative;
     margin: 20px 0px;
 
-    :not(:first-child) {
-      margin-top: 30px;
+    // :not(:first-child) {
+    //   margin-top: 30px;
+    // }
+    .list_column__table {
+      // width: 450px;
+      height: 75vh;
     }
 
     .list_column__button {

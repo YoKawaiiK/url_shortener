@@ -18,6 +18,7 @@ $info : #D1E8E4;
 $link: #39A388;
 
 
+
 $color-on-primary: #F8EDE3;
 $color-on-primary-ligth:#334756 ;
 
@@ -40,8 +41,13 @@ $input-shadow: none;
 // table
 $table-background-color: transparent;
 $table-striped-row-even-background-color: lighten($primary, 25%);
-// highligth color
-$table--highlight-color: darken($primary, 20%);
+
+$table--border-color : $primary;
+$table--link-small--font-size: 12px;
+$table--link-small--color: #4b645d;
+$table--link-small--color-hover: #334756;
+//table highligth row color
+$table--highlight-color: $primary-light;
 
 
 // typography
