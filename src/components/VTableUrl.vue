@@ -16,8 +16,8 @@
             :class="{ highlight: highlight && url.id == selectedRow }"
           >
             <td>
-              <a href="http://url"> {{ url.shortUrl }}</a>
-              <a class="link__small" href="http://url">{{ url.longUrl }}</a>
+              <a :href="url.shortUrl"> {{ url.shortUrl }}</a>
+              <a class="link__small" :href="url.longUrl">{{ url.longUrl }}</a>
             </td>
             <td>
               <span class="td_buttons">

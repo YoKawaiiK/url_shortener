@@ -52,6 +52,7 @@ export default {
     },
     [DELETE_URL_LIST](state) {
       state.urlList = [];
+      state.shortUrlStats = {};
     },
   },
   actions: {
